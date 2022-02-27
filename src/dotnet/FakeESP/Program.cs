@@ -52,18 +52,6 @@ namespace FakeESP
                     bool success;
                     do
                     {
-                        //try
-                        //{
-                        //    var key = Console.Read();
-                        //    if (key == 13) // Enter
-                        //    {
-                        //        if (isReceiving)
-                        //            WriteStatus("Received " + rPos + " bytes so far");
-                        //        else
-                        //            WriteStatus("Not currently receiving");
-                        //    }
-                        //}
-                        //catch { }
                         var b = listener.ReadByte(out success);
                         if (success)
                         {
@@ -105,6 +93,17 @@ namespace FakeESP
                                 pos = 0;
                                 WriteStatus("Received AT test command");
                                 SendWrite("\r\nOK\r\n");
+                            }
+                            else if (val.EndsWith("AT+GMR\r\n"))
+                            {
+                                pos = 0;
+                                WriteStatus("ESP version was queried, sending sample info for 1.6.2.0/2.2.1");
+                                SendWrite("AT+GMR\r\n" 
+                                    + "AT version:1.6.2.0(Apr 13 2018 11:10:59)\r\n"
+                                    + "SDK version:2.2.1(6ab97e9)\r\n"
+                                    + "compile time:Jun  7 2018 19:34:27\r\n"
+                                    + "Bin version(Wroom 02):1.6.2\r\n"
+                                    + "OK\r\n");
                             }
                             else if (rBaudQ.IsMatch(val))
                             {
